@@ -2,6 +2,10 @@ version: '3'
 
 services:
 
+#######################################################
+###                   HUGINN                        ###
+#######################################################
+
   huginn:  
     image: huginn/huginn
     restart: always
@@ -9,10 +13,40 @@ services:
       - VIRTUAL_HOST=huginn.mpdmail.de
       - LETSENCRYPT_HOST=huginn.mpdmail.de
       - LETSENCRYPT_EMAIL=github@mpdmail.de
-    expose:
-      - 3000
+      - HUGINN_DATABASE_USERNAME=huginn
+      - HUGINN_DATABASE_ADAPTER=postgresql
+      - POSTGRES_PORT_5432_TCP_ADDR=huginn_postgres
+      - POSTGRES_PORT_5432_TCP_PORT=5432
+    ports:
+      - "3000:3000"
     networks:
       - proxy-tier
+      - huginn_net
+    depends_on:
+      - huginn_postgres
+    env_file:
+      - credentials.env
+
+  huginn_postgres:
+    image: postgres:10.2
+    restart: always
+    environment:
+      - POSTGRES_USER=huginn
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - credentials.env
+    networks:
+      - huginn_net
+
+#######################################################
+
+
+#######################################################
+###                NGINX-PROXY                      ###
+#######################################################
 
   proxy:
     build: ./proxy
@@ -45,11 +79,16 @@ services:
     depends_on:
       - proxy
 
+#######################################################
+
+
 volumes:
   certs:
   conf.d:
   vhost.d:
   html:
+  postgres-data:
 
 networks:
   proxy-tier:
+  huginn_net:
