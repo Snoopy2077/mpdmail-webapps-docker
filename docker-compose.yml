@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+
+  huginn:  
+    image: huginn/huginn
+    restart: always
+    environment:
+      - VIRTUAL_HOST=huginn.mpdmail.de
+      - LETSENCRYPT_HOST=huginn.mpdmail.de
+      - LETSENCRYPT_EMAIL=github@mpdmail.de
+    expose:
+      - 3000
+    networks:
+      - proxy-tier
+
+  proxy:
+    build: ./proxy
+    restart: always
+    ports:
+      - "443:443"
+      - "80:80"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    volumes:
+      - certs:/etc/nginx/certs:ro
+      - conf.d:/etc/nginx/conf.d
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy-tier
+
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    volumes:
+      - certs:/etc/nginx/certs
+      - conf.d:/etc/nginx/conf.d
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy-tier
+    depends_on:
+      - proxy
+
+volumes:
+  certs:
+  conf.d:
+  vhost.d:
+  html:
+
+networks:
+  proxy-tier:
