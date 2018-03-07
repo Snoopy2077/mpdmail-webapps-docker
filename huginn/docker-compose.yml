@@ -39,5 +39,3 @@ networks:
   default:
     external:
       name: nginx-proxy
-  huginn_net:
-
