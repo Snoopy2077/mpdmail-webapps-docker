@@ -9,10 +9,7 @@ huginn/
 tbd.
 
 ## (Re-)Deployment
-1. run
-```bash
-docker network create nginx-proxy
-```
+1. run ```bash docker network create nginx-proxy```
 every container using the nginx proxy has to be in this network
 1. (optional) restore all necessary volumes from backup
 2. copy relevant credentials_<app>.env files from secure location or create new from credentials_<app>.env_template
