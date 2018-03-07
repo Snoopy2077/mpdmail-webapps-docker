@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  huginn:  
+    image: huginn/huginn
+    restart: always
+    environment:
+      - VIRTUAL_HOST=huginn.mpdmail.net
+      - LETSENCRYPT_HOST=huginn.mpdmail.net,cloud.mpdmail.net
+      - LETSENCRYPT_EMAIL=github@mpdmail.de
+      - HUGINN_DATABASE_USERNAME=huginn
+      - HUGINN_DATABASE_ADAPTER=postgresql
+      - POSTGRES_PORT_5432_TCP_ADDR=huginn_postgres
+      - POSTGRES_PORT_5432_TCP_PORT=5432
+    ports:
+      - "3000:3000"
+    depends_on:
+      - huginn_postgres
+    env_file:
+      - credentials_huginn.env
+
+  huginn_postgres:
+    image: postgres:10.2
+    restart: always
+    environment:
+      - POSTGRES_USER=huginn
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - credentials_huginn.env
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+  huginn_net:
+
