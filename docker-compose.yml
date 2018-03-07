@@ -10,8 +10,8 @@ services:
     image: huginn/huginn
     restart: always
     environment:
-      - VIRTUAL_HOST=huginn.mpdmail.de
-      - LETSENCRYPT_HOST=huginn.mpdmail.de
+      - VIRTUAL_HOST=huginn2.mpdmail.de
+      - LETSENCRYPT_HOST=huginn2.mpdmail.de
       - LETSENCRYPT_EMAIL=github@mpdmail.de
       - HUGINN_DATABASE_USERNAME=huginn
       - HUGINN_DATABASE_ADAPTER=postgresql
@@ -42,6 +42,53 @@ services:
       - huginn_net
 
 #######################################################
+
+#######################################################
+###                NEXTCLOUD                        ###
+#######################################################
+
+
+  nextcloud_db:
+    image: mariadb
+    restart: always
+    volumes:
+      - nextcloud_db:/var/lib/mysql
+    env_file:
+      - db.env
+      - credentials.env
+
+  nextcloud_redis:
+    image: redis
+    restart: always
+
+  nextcloud_app:
+    build: ./app
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - VIRTUAL_HOST=nextcloudtest.mpdmail.de
+      - LETSENCRYPT_HOST=nextcloudtest.mpdmail.de
+      - LETSENCRYPT_EMAIL=github@mpdmail.de
+      - MYSQL_HOST=db
+    env_file:
+      - db.env
+    depends_on:
+      - nextcloud_db
+      - nextcloud_redis
+    networks:
+      - proxy-tier
+      - default
+
+  nextcloud_cron:
+    build: ./app
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - nextcloud_db
+      - nextcloud_redis
 
 
 #######################################################
@@ -83,6 +130,8 @@ services:
 
 
 volumes:
+  nextcloud_db:
+  nextcloud:
   certs:
   conf.d:
   vhost.d:
