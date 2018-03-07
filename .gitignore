@@ -1,2 +1,3 @@
 credentials.env
 huginn/credentials_huginn.env
+nextcloud/credentials_nextcloud.env
