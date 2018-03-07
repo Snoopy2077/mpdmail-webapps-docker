@@ -6,15 +6,16 @@ this is the proxy for all web services
 
 huginn/
 
-tbd.
+nextcloud/
 
 ## (Re-)Deployment
 1. run ```bash docker network create nginx-proxy```
+
 every container using the nginx proxy has to be in this network
-1. (optional) restore all necessary volumes from backup
-2. copy relevant credentials_<app>.env files from secure location or create new from credentials_<app>.env_template
-3. create DNS A records for all required subdomains for this host and add the subdomains in the docker-compose.yml
-4. run ```bash
+2. (optional) restore all necessary volumes from backup
+3. copy relevant credentials_<app>.env files from secure location or create new from credentials_<app>.env_template
+4. create DNS A records for all required subdomains for this host and add the subdomains in the docker-compose.yml
+5. run ```bash
 sudo docker compose up -d```
 for every app you want to run
 
