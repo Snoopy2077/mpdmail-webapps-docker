@@ -6,9 +6,7 @@ services:
     image: huginn/huginn
     restart: always
     environment:
-      - VIRTUAL_HOST=huginn.mpdmail.net
-      - LETSENCRYPT_HOST=huginn.mpdmail.net,cloud.mpdmail.net
-      - LETSENCRYPT_EMAIL=github@mpdmail.de
+      - VIRTUAL_HOST=huginn.mpdmail.de
       - HUGINN_DATABASE_USERNAME=huginn
       - HUGINN_DATABASE_ADAPTER=postgresql
       - POSTGRES_PORT_5432_TCP_ADDR=huginn_postgres
@@ -19,6 +17,7 @@ services:
       - huginn_postgres
     env_file:
       - credentials_huginn.env
+      - ../certificate.env
 
   huginn_postgres:
     image: postgres:10.2
