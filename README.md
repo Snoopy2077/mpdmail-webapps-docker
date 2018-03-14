@@ -11,14 +11,15 @@ huginn/
 nextcloud/
 
 ## (Re-)Deployment
-1. run ```bash docker network create nginx-proxy```
+1. run ```bash sudo docker network create nginx-proxy```
 
 every container using the nginx proxy has to be in this network
 2. (optional) restore all necessary volumes from backup
+2. make sure docker-compose is installed
 3. copy relevant credentials_<app>.env files from secure location or create new from credentials_<app>.env_template
 4. create DNS A records for all required subdomains for this host and add the subdomains in the docker-compose.yml
 5. run ```bash
-sudo docker compose up -d```
+sudo docker-compose up -d```
 for every app you want to run
 
 ## Add new webapp reachable under subdomain newwebapp.mpdmail.de
