@@ -16,6 +16,7 @@ nextcloud/
 every container using the nginx proxy has to be in this network
 2. (optional) restore all necessary volumes from backup
 2. make sure docker-compose is installed
+3. (IMPORTANT) for each entry in LETSENCRYPT_HOST in certificate.env there must be a VIRTUAL_HOST set to that address in a RUNNING container - otherwise the creation of certificates will fail
 3. copy relevant credentials_<app>.env files from secure location or create new from credentials_<app>.env_template
 4. create DNS A records for all required subdomains for this host and add the subdomains in the docker-compose.yml
 5. run ```bash
