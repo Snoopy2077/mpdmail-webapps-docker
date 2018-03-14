@@ -14,11 +14,17 @@ nextcloud/
 1. run ```bash sudo docker network create nginx-proxy```
 
 every container using the nginx proxy has to be in this network
+
 2. (optional) restore all necessary volumes from backup
+
 3. make sure docker-compose is installed
+
 4. (IMPORTANT) for each entry in LETSENCRYPT_HOST in certificate.env there must be a VIRTUAL_HOST set to that address in a RUNNING container - otherwise the creation of certificates will fail
+
 5. copy relevant credentials_<app>.env files from secure location or create new from credentials_<app>.env_template
+  
 6. create DNS A records for all required subdomains for this host and add the subdomains in the docker-compose.yml
+
 7. run ```bash
 sudo docker-compose up -d```
 for every app you want to run
