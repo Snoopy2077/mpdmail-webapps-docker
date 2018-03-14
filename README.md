@@ -12,6 +12,7 @@ nextcloud/
 
 ## (Re-)Deployment
 1. run ```bash sudo docker network create nginx-proxy```
+
 every container using the nginx proxy has to be in this network
 
 2. (optional) restore all necessary volumes from backup
