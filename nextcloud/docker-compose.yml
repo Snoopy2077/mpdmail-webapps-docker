@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: mariadb
+    image: mariadb:10.3
     restart: always
     command: mysqld --max-connections=1000 --default_authentication_plugin=mysql_native_password
     volumes:
